@@ -35,6 +35,7 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
+getDocs,
 } from "@firebase/firestore";
 import db from "../firebase/init";
 import ReviewListItem from "./ReviewListItem.vue";
@@ -82,7 +83,6 @@ export default {
           this.reviews.push({ id: doc.id, ...doc.data() });
           this.allStar += doc.data().star;
         });
-        console.log((await getCountFromServer(review)).data().count);
         this.noOfReviews = (await getCountFromServer(review)).data().count;
       });
     },
@@ -93,22 +93,43 @@ export default {
         product: doc(db, "products", this.$route.params.productId),
       };
       const overall = (this.allStar + data.star) / (this.reviews.length + 1);
-      console.log("new overall => " + overall);
       await updateDoc(doc(db, "products", this.$route.params.productId), {
         overall_rating: overall,
       });
       await addDoc(collection(db, "reviews"), newReview);
+      await this.updateShopOverall()
     },
     async deleteRe(id) {
-      console.log(id);
-
       await deleteDoc(doc(db, "reviews", id.id));
       const overall =
         this.reviews.length == 0 ? 0 : this.allStar / this.reviews.length;
       await updateDoc(doc(db, "products", this.$route.params.productId), {
         overall_rating: overall,
       });
+      await this.updateShopOverall()
     },
+    async updateShopOverall() { 
+      let shopAllStar = [];
+      const q = query(
+        collection(db, "products"),
+        where(
+          "owner",
+          "==",
+          doc(db, "shops", this.$route.params.shopId)
+        )
+      )
+      const querysnap = await getDocs(q);
+  
+      querysnap.forEach((doc) => {
+        shopAllStar.push(doc.data().overall_rating);
+      })
+      console.log("all star prod => " + shopAllStar);
+
+      const overall = shopAllStar.length == 0 ? 0 : (shopAllStar.reduce((a, b) => a + b, 0) / shopAllStar.length)
+      console.log("new shop overall => " + overall);
+      await updateDoc(doc(db, "shops", this.$route.params.shopId), {overall_rating: overall})
+      console.log("shop updated");
+    }
   },
 };
 </script>
