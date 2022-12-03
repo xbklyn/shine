@@ -21,7 +21,14 @@
 </template>
 
 <script>
-import { collection, doc, onSnapshot, where, query, getCountFromServer } from "@firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  where,
+  query,
+  getCountFromServer,
+} from "@firebase/firestore";
 import db from "../firebase/init";
 import ProductListItem from "./ProductListItem.vue";
 

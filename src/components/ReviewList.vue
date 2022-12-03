@@ -35,7 +35,7 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
-getDocs,
+  getDocs,
 } from "@firebase/firestore";
 import db from "../firebase/init";
 import ReviewListItem from "./ReviewListItem.vue";
@@ -97,7 +97,7 @@ export default {
         overall_rating: overall,
       });
       await addDoc(collection(db, "reviews"), newReview);
-      await this.updateShopOverall()
+      await this.updateShopOverall();
     },
     async deleteRe(id) {
       await deleteDoc(doc(db, "reviews", id.id));
@@ -106,30 +106,31 @@ export default {
       await updateDoc(doc(db, "products", this.$route.params.productId), {
         overall_rating: overall,
       });
-      await this.updateShopOverall()
+      await this.updateShopOverall();
     },
-    async updateShopOverall() { 
+    async updateShopOverall() {
       let shopAllStar = [];
       const q = query(
         collection(db, "products"),
-        where(
-          "owner",
-          "==",
-          doc(db, "shops", this.$route.params.shopId)
-        )
-      )
+        where("owner", "==", doc(db, "shops", this.$route.params.shopId))
+      );
       const querysnap = await getDocs(q);
-  
+
       querysnap.forEach((doc) => {
         shopAllStar.push(doc.data().overall_rating);
-      })
+      });
       console.log("all star prod => " + shopAllStar);
 
-      const overall = shopAllStar.length == 0 ? 0 : (shopAllStar.reduce((a, b) => a + b, 0) / shopAllStar.length)
+      const overall =
+        shopAllStar.length == 0
+          ? 0
+          : shopAllStar.reduce((a, b) => a + b, 0) / shopAllStar.length;
       console.log("new shop overall => " + overall);
-      await updateDoc(doc(db, "shops", this.$route.params.shopId), {overall_rating: overall})
+      await updateDoc(doc(db, "shops", this.$route.params.shopId), {
+        overall_rating: overall,
+      });
       console.log("shop updated");
-    }
+    },
   },
 };
 </script>
