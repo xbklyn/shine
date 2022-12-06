@@ -1,15 +1,22 @@
 const admin = require("firebase-admin");
-const { getFirestore, DocumentReference } = require('firebase-admin/firestore');
-const  { doc, setDoc, collection, addDoc, add, getDoc} = require("firebase/firestore") ; 
+const { getFirestore, DocumentReference } = require("firebase-admin/firestore");
+const {
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+  add,
+  getDoc,
+} = require("firebase/firestore");
 const serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-const db = getFirestore(); 
+const db = getFirestore();
 
-const  shops = [
+const shops = [
   {
     id: "1",
     name: "SHINE",
@@ -20,7 +27,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "This is the best Shop",
-    overall_rating: 1.5
+    overall_rating: 1.5,
   },
   {
     id: "2",
@@ -32,7 +39,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "SHINN SHOP",
-    overall_rating: 1
+    overall_rating: 1,
   },
   {
     id: "3",
@@ -44,7 +51,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "NICE SHOP",
-    overall_rating: 1
+    overall_rating: 1,
   },
   {
     id: "4",
@@ -56,7 +63,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "PP's shops",
-    overall_rating: 1.5
+    overall_rating: 1.5,
   },
   {
     id: "5",
@@ -68,7 +75,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "panda's shop",
-    overall_rating: 1.5
+    overall_rating: 1.5,
   },
   {
     id: "6",
@@ -80,7 +87,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "Grab's shop",
-    overall_rating: 1.5
+    overall_rating: 1.5,
   },
   {
     id: "7",
@@ -92,7 +99,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "Film's shop",
-    overall_rating: 1.5
+    overall_rating: 1.5,
   },
   {
     id: "8",
@@ -104,7 +111,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "babaynoey's shop",
-    overall_rating: 1.5
+    overall_rating: 1.5,
   },
   {
     id: "9",
@@ -116,7 +123,7 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "BANKZA's SHOP",
-    overall_rating: 3
+    overall_rating: 3,
   },
   {
     id: "10",
@@ -128,9 +135,9 @@ const  shops = [
       state: "Rangsit",
     },
     desc: "NOAAH SHOP",
-    overall_rating: 1.5
+    overall_rating: 1.5,
   },
-]
+];
 
 const products = [
   {
@@ -213,70 +220,70 @@ const products = [
     price: 12,
     qty: 3,
   },
-]
+];
 
 const reviews = [
   {
     name: "Nut",
     product: "/products/1",
     review: "-",
-    star: 2
+    star: 2,
   },
   {
     name: "Dragon",
     product: "/products/1",
     review: "-",
-    star: 1
+    star: 1,
   },
   {
     name: "Benjamin",
     product: "/products/1",
     review: "-",
-    star: 4
+    star: 4,
   },
   {
     name: "Babynoey",
     product: "/products/1",
     review: "-",
-    star: 5
+    star: 5,
   },
   {
     name: "Tle",
     product: "/products/1",
     review: "-",
-    star: 1
+    star: 1,
   },
   {
     name: "Tle TNP",
     product: "/products/2",
     review: "-",
-    star: 2
+    star: 2,
   },
   {
     name: "Jda",
     product: "/products/2",
     review: "-",
-    star: 3
+    star: 3,
   },
   {
     name: "Pp za",
     product: "/products/2",
     review: "-",
-    star: 3
+    star: 3,
   },
   {
     name: "ggenaw",
     product: "/products/7",
     review: "-",
-    star: 2
+    star: 2,
   },
   {
     name: "Anonymous",
     product: "/products/8",
     review: "-",
-    star: 1
-  }
-]
+    star: 1,
+  },
+];
 
 console.log("Addding shops . . .");
 shops.forEach(function (obj, index) {
@@ -287,8 +294,8 @@ shops.forEach(function (obj, index) {
     desc: obj.desc,
     overall_rating: obj.overall_rating,
     created_at: new Date(),
-  }
-  const id = index+1
+  };
+  const id = index + 1;
   db.collection("shops")
     .doc(id.toString())
     .set(shopRef)
@@ -305,11 +312,11 @@ products.forEach(async function (obj, index) {
     desc: obj.desc,
     name: obj.name,
     overall_rating: obj.overall_rating,
-    owner:  ownerRef,
+    owner: ownerRef,
     price: obj.price,
     qty: obj.qty,
-  }
-  const id = index+1
+  };
+  const id = index + 1;
   db.collection("products")
     .doc(id.toString())
     .set(prodRef)
@@ -320,7 +327,6 @@ products.forEach(async function (obj, index) {
 
 console.log("Addding reviews . . .");
 reviews.forEach(async function (obj, index) {
-
   const prodRef = db.doc(obj.product);
 
   const reviewRef = {
@@ -329,8 +335,8 @@ reviews.forEach(async function (obj, index) {
     review: "-",
     star: 3,
     created_at: new Date(),
-  }
-  const id = index+1
+  };
+  const id = index + 1;
   db.collection("reviews")
     .doc(id.toString())
     .set(reviewRef)
