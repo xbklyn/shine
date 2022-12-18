@@ -5,7 +5,6 @@ const {
   setDoc,
   collection,
   addDoc,
-  add,
   getDoc,
 } = require("firebase/firestore");
 const serviceAccount = require("./serviceAccountKey.json");
